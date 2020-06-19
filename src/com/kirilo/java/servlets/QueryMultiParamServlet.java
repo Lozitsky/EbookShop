@@ -1,3 +1,5 @@
+package com.kirilo.java.servlets;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -7,8 +9,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 
-@WebServlet("/querymv")
-public class QueryMultiValueServlet extends HttpServlet {
+@WebServlet("/querymp")
+public class QueryMultiParamServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
@@ -29,8 +31,12 @@ public class QueryMultiValueServlet extends HttpServlet {
                  // The format is: "jdbc:mysql://hostname:port/databaseName", "username", "password"
 
                  Statement stmt = conn.createStatement()) {
+
                 // Step 3: Execute a SQL SELECT query
-                String sqlStr = getAuthorsQuery(req);
+                String sqlStr = "select * from books where author = "
+                        + "'" + req.getParameter("author") + "'"   // Single-quote SQL string
+                        + " and price < " + req.getParameter("price")
+                        + " and qty > 0 order by price desc";
 
                 out.println("<h3>Thank you for your query.</h3>");
                 out.println("<p>Your SQL statement is: " + sqlStr + "</p>"); // Echo for debugging
@@ -57,30 +63,6 @@ public class QueryMultiValueServlet extends HttpServlet {
         catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    private String getAuthorsQuery(HttpServletRequest req) {
-        return "select * from books where author in ("
-                + getAuthors(req)   // Multi-value-quote SQL string
-                + ") and qty > 0 order by price desc, author asc, title asc";
-    }
-
-    private String getAuthors(HttpServletRequest req) {
-        final String[] authors = req.getParameterValues("author");
-        if (authors == null) {
-            return null;
-        }
-        final StringBuilder builder = new StringBuilder("'");
-        for (int i = 0, authorsLength = authors.length; i < authorsLength; i++) {
-            String author = authors[i];
-            builder.append(author);
-            if (i < authorsLength - 1) {
-                builder.append("', '");
-            } else {
-                builder.append("'");
-            }
-        }
-        return builder.toString();
     }
 
     @Override
