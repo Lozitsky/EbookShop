@@ -17,4 +17,15 @@ insert into books values (1003, 'More Java for more dummies', 'Mohammad Ali', 33
 insert into books values (1004, 'A Cup of Java', 'Kumar', 44.44, 44);
 insert into books values (1005, 'A Teaspoon of Java', 'Kevin Jones', 55.55, 55);
 
+drop table if exists order_records;
+
+-- use ebookshop;
+
+create table order_records (
+  id          int,
+  qty_ordered int,
+  cust_name   varchar(30),
+  cust_email  varchar(30),
+  cust_phone  char(8));
+
 select * from books;

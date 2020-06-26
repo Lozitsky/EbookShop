@@ -14,5 +14,5 @@ exit
 	# login as admin db
 	mysql -u admin_db -p password
 show databases;
-use ebookshop
+use ebookshop;
 show tables;
